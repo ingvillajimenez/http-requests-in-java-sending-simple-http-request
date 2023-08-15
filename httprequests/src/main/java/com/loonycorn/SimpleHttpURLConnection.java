@@ -3,7 +3,6 @@ package com.loonycorn;
 import java.io.BufferedReader; // class BufferedReader
 import java.io.IOException; // class IOException
 import java.io.InputStreamReader; // class InputStreamReader
-import java.io.OutputStream; // abstract class OutputStream
 import java.net.URL; // final class URL
 import java.net.HttpURLConnection; // abstract class HttpURLConnection
 import java.net.MalformedURLException; // class MalformedURLException
@@ -13,82 +12,64 @@ public class SimpleHttpURLConnection {
 
     public static void main(String[] args) {
 
+        BufferedReader read;
         String text;
         StringBuffer content = new StringBuffer();
 
         try {
 
-            URL url = new URL("https://reqres.in/api/users/277");
+            URL url = new URL("https://reqres.in/api/users?delay=5");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod("DELETE");
-//            conn.setRequestMethod("PUT");
+            conn.setRequestMethod("HEAD");
+//            conn.setRequestMethod("GET");
 
-//            conn.setDoOutput(true);
-//
-//            String postData = "{'email':'alice.alison@loonycorn.com'," +
-//                    "'firstName':'Alice','lastName':'Alison'}";
-//
-//            try (OutputStream outputStream = conn.getOutputStream()) {
-//
-//                byte[] postBytes = postData.getBytes("utf-8");
-//                outputStream.write(postBytes, 0, postBytes.length);
-//            }
+            int statusCode = conn.getResponseCode();
 
-            System.out.println("Response code: " + conn.getResponseCode());
-            //Response code: 204
-            //Response code: 204
-            //Response code: 200
-            System.out.println("Response message: " + conn.getResponseMessage());
-            //Response message: No Content
-            //Response message: No Content
-            //Response message: OK
-
+            System.out.println("The status is: " + statusCode);
+            //The status is: 200
+            //The status is: 200
             long responseSize = conn.getContentLengthLong();
             System.out.println("Size: " + responseSize);
-            //Size: 0
+            //Size: 996
+            //Size: 996
+
+            System.out.println("Headers: " + conn.getHeaderFields().toString());
+            //Headers: {null=[HTTP/1.1 200 OK], CF-RAY=[7f74297f39904857-DFW], Server=[cloudflare], Access-Control-Allow-Origin=[*], Connection=[keep-alive], Date=[Tue, 15 Aug 2023 20:24:42 GMT], Via=[1.1 vegur], CF-Cache-Status=[DYNAMIC], NEL=[{"success_fraction":0,"report_to":"cf-nel","max_age":604800}], Etag=[W/"3e4-2RLXvr5wTg9YQ6aH95CkYoFNuO8"], Report-To=[{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=Ufl15dfzvv5l5Gx0MBZvkjt%2FwQv%2Bvnyth0x%2BLMLuC6jYcE%2FOWcnc%2BmvveIRf3n8TL9Vw0YrOWrdkwhgIWgNlLmMuvFONaEUTB1T9djLX3%2F7Hc%2BoI76LM8VsP2A%3D%3D"}],"group":"cf-nel","max_age":604800}], Content-Length=[996], X-Powered-By=[Express], Content-Type=[application/json; charset=utf-8]}
+            //Headers: {null=[HTTP/1.1 200 OK], CF-RAY=[7f74228648ac35a2-DFW], Server=[cloudflare], Access-Control-Allow-Origin=[*], Connection=[keep-alive], Date=[Tue, 15 Aug 2023 20:19:56 GMT], Via=[1.1 vegur], CF-Cache-Status=[DYNAMIC], NEL=[{"success_fraction":0,"report_to":"cf-nel","max_age":604800}], Etag=[W/"3e4-2RLXvr5wTg9YQ6aH95CkYoFNuO8"], Report-To=[{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=7YYPlqxbmKmAFK6S3zhxd2HSAZGQUHp4SnFBxHvKUvmKBTRI83MfFQTx4B2JH02mrOzmZprWjIgyE92jFY6xqoS3VnxRp3mh8jCIoQkQnKc0tH8rjuUw5%2BZnsw%3D%3D"}],"group":"cf-nel","max_age":604800}], Content-Length=[996], X-Powered-By=[Express], Content-Type=[application/json; charset=utf-8]}
 
             if (responseSize > 0) {
+//            if (!conn.getRequestMethod().equalsIgnoreCase("GET")
+//                    && responseSize > 0) {
 
-                try (BufferedReader read = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+                System.out.println("\nThe response body:");
 
-                    StringBuilder responseText = new StringBuilder();
+                if (statusCode >= 200 && statusCode < 299) {
+
+                    read = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
                     while ((text = read.readLine()) != null) {
-                        responseText.append(text.trim());
+                        content.append(text);
                     }
 
+                    read.close();
+
+                    String responseText = content.toString();
+
                     if (conn.getHeaderField("Content-Type").contains("json")) {
-                        JSONObject jsonObj = new JSONObject(responseText.toString());
+                        JSONObject jsonObj = new JSONObject(responseText);
+                        //Exception in thread "main" org.json.JSONException: A JSONObject text must begin with '{' at 0 [character 1 line 1]
+                        //	at org.json.JSONTokener.syntaxError(JSONTokener.java:507)
+                        //	at org.json.JSONObject.<init>(JSONObject.java:222)
+                        //	at org.json.JSONObject.<init>(JSONObject.java:406)
+                        //	at com.loonycorn.SimpleHttpURLConnection.main(SimpleHttpURLConnection.java:57)
                         System.out.println("JSON:\n" + jsonObj.toString(4));
                     } else {
-                        System.out.println(responseText.toString());
+                        System.out.println(responseText);
                     }
                 }
             }
-
-//            try (BufferedReader read = new BufferedReader(
-//                    new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-//
-//                StringBuilder responseText = new StringBuilder();
-//
-//                while ((text = read.readLine()) != null) {
-//                    responseText.append(text.trim());
-//                }
-//                //Exception in thread "main" java.lang.NullPointerException
-//                //at com.loonycorn.SimpleHttpURLConnection.main(SimpleHttpURLConnection.java:53)
-//                if (conn.getHeaderField("Content-Type").contains("json")) {
-//                    JSONObject jsonObject = new JSONObject(responseText.toString());
-//                    System.out.println("JSON:\n" + jsonObject.toString(4));
-//                    //JSON:
-//                    //{"updatedAt": "2023-08-15T19:43:33.223Z"}
-//                } else {
-//                    System.out.println(responseText.toString());
-//                }
-//            }
-
             conn.disconnect();
 
         } catch (MalformedURLException murlx) {
