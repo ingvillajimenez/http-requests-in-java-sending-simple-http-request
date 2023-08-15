@@ -18,8 +18,8 @@ public class SimpleHttpURLConnection {
 
         try {
 
-            URL url = new URL("https://reqres.in/api/users?page=2");
-//            URL url = new URL("https://reqres.in/api/users");
+            URL url = new URL("https://reqres.in/api/users?page=2&delay=5");
+//            URL url = new URL("https://reqres.in/api/users?page=2");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -29,18 +29,24 @@ public class SimpleHttpURLConnection {
 
             System.out.println("The status is: " + statusCode);
             //The status is: 200
-            //The status is: 200
 
             System.out.println("Returned headers:\n" + conn.getHeaderFields());
             //Returned headers:
-            //{null=[HTTP/1.1 200 OK], CF-RAY=[7f72e7ae69434868-DFW], Server=[cloudflare], Access-Control-Allow-Origin=[*], Connection=[keep-alive], Date=[Tue, 15 Aug 2023 16:44:55 GMT], Via=[1.1 vegur], Accept-Ranges=[bytes], CF-Cache-Status=[HIT], NEL=[{"success_fraction":0,"report_to":"cf-nel","max_age":604800}], Cache-Control=[max-age=14400], Etag=[W/"406-ut0vzoCuidvyMf8arZpMpJ6ZRDw"], Report-To=[{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=CBuGfsv5%2FIFiboejRJ5TRXE1h5xVLRQUvfKGVL9cfjYxLAFS5kaD3kYdXqKj50beruaTn1oRgiJJH2xdYn8AGM4e2gRl%2FzVEwQ7LFB%2B7rlUAJvMs%2BLa%2F26xg%2Bg%3D%3D"}],"group":"cf-nel","max_age":604800}], Content-Length=[1030], Age=[1358], X-Powered-By=[Express], Content-Type=[application/json; charset=utf-8]}
-            //{null=[HTTP/1.1 200 OK], CF-RAY=[7f72b3f39d5ae92e-DFW], Server=[cloudflare], Access-Control-Allow-Origin=[*], Connection=[keep-alive], Date=[Tue, 15 Aug 2023 16:09:36 GMT], Via=[1.1 vegur], Accept-Ranges=[bytes], CF-Cache-Status=[HIT], NEL=[{"success_fraction":0,"report_to":"cf-nel","max_age":604800}], Cache-Control=[max-age=14400], Etag=[W/"3e4-2RLXvr5wTg9YQ6aH95CkYoFNuO8"], Report-To=[{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=mBXtB%2Bcp1TiIr97%2BWY7aB82b8tc0H4GKy9I5mhN9R8m6mq0I5jwSeN1HFo%2BEaiQyw4ZYVbzg96ulK74wH5wbvuBNLtzHB2dMOd%2Bk36cxR9Zb231sxB8DUev8sQ%3D%3D"}],"group":"cf-nel","max_age":604800}], Content-Length=[996], Age=[2437], X-Powered-By=[Express], Content-Type=[application/json; charset=utf-8]}
-            System.out.println("Content size: " + conn.getHeaderField("Content-Length"));
-            //Content size: 1030
-            //Content size: 996
+            //{null=[HTTP/1.1 200 OK], CF-RAY=[7f7322fbaec6e7b3-DFW], Server=[cloudflare], Access-Control-Allow-Origin=[*], Connection=[keep-alive], Date=[Tue, 15 Aug 2023 17:25:24 GMT], Via=[1.1 vegur], Accept-Ranges=[bytes], CF-Cache-Status=[HIT], NEL=[{"success_fraction":0,"report_to":"cf-nel","max_age":604800}], Cache-Control=[max-age=14400], Etag=[W/"406-ut0vzoCuidvyMf8arZpMpJ6ZRDw"], Report-To=[{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=vvzYxpG6JW18icq5rYMe7gNB5u5Ltqf7WEGrVo%2BCJaMZbs4Q%2F8uTMHTLW%2BOGLGim3ixXc9qXjnPdRKKS2pxh6a7gJS2kbzIc9U2aTerodyWcyKakmAyBm6l6aQ%3D%3D"}],"group":"cf-nel","max_age":604800}], Content-Length=[1030], Age=[514], X-Powered-By=[Express], Content-Type=[application/json; charset=utf-8]}
+            System.out.println("Content size from header: " + conn.getHeaderField("Content-Length"));
+            //Content size from header: 1030
+            System.out.println("Content size from method: " + conn.getContentLengthLong());
+            //Content size from method: 1030
             System.out.println("Content type: " + conn.getHeaderField("Content-Type"));
             //Content type: application/json; charset=utf-8
-            //Content type: application/json; charset=utf-8
+
+//            System.out.println("Returned headers:\n" + conn.getHeaderFields());
+//            //Returned headers:
+//            //{null=[HTTP/1.1 200 OK], CF-RAY=[7f73164cdb1fe7c7-DFW], Server=[cloudflare], Access-Control-Allow-Origin=[*], Connection=[keep-alive], Date=[Tue, 15 Aug 2023 17:16:50 GMT], Via=[1.1 vegur], Accept-Ranges=[bytes], CF-Cache-Status=[MISS], NEL=[{"success_fraction":0,"report_to":"cf-nel","max_age":604800}], Cache-Control=[max-age=14400], Etag=[W/"406-ut0vzoCuidvyMf8arZpMpJ6ZRDw"], Report-To=[{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=sQi6MNBTaR5DzgKsVSS02lR9HZbOugQzLEyp86kPQUYreIRXXejXbr9QBFlQfGCdU%2FMk4oLW6qXFdST0tSbfl%2FUr5V5T83uBNVl5s%2FrYtjn1cwPFrUNW4gsSqw%3D%3D"}],"group":"cf-nel","max_age":604800}], Content-Length=[1030], X-Powered-By=[Express], Content-Type=[application/json; charset=utf-8]}
+//            System.out.println("Content size: " + conn.getHeaderField("Content-Length"));
+//            //Content size: 1030
+//            System.out.println("Content type: " + conn.getHeaderField("Content-Type"));
+//            //Content type: application/json; charset=utf-8
 
             System.out.println("\nThe response body:");
 
@@ -121,22 +127,6 @@ public class SimpleHttpURLConnection {
 
             }
 
-//            if (statusCode >= 200 && statusCode <= 299) {
-//
-//                read = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//
-//                while ((text = read.readLine()) != null) {
-//                    content.append(text);
-//                }
-//
-//                read.close();
-//                System.out.println(content.toString());
-//                //{"page":1,"per_page":6,"total":12,"total_pages":2,"data":[{"id":1,"email":"george.bluth@reqres.in","first_name":"George","last_name":"Bluth","avatar":"https://reqres.in/img/faces/1-image.jpg"},{"id":2,"email":"janet.weaver@reqres.in","first_name":"Janet","last_name":"Weaver","avatar":"https://reqres.in/img/faces/2-image.jpg"},{"id":3,"email":"emma.wong@reqres.in","first_name":"Emma","last_name":"Wong","avatar":"https://reqres.in/img/faces/3-image.jpg"},{"id":4,"email":"eve.holt@reqres.in","first_name":"Eve","last_name":"Holt","avatar":"https://reqres.in/img/faces/4-image.jpg"},{"id":5,"email":"charles.morris@reqres.in","first_name":"Charles","last_name":"Morris","avatar":"https://reqres.in/img/faces/5-image.jpg"},{"id":6,"email":"tracey.ramos@reqres.in","first_name":"Tracey","last_name":"Ramos","avatar":"https://reqres.in/img/faces/6-image.jpg"}],"support":{"url":"https://reqres.in/#support-heading","text":"To keep ReqRes free, contributions towards server costs are appreciated!"}}
-//            }
-//            else {
-//                System.out.println("The request failed : " + conn.getResponseMessage());
-//            }
-
             conn.disconnect();
 
         } catch (MalformedURLException murlx) {
@@ -146,3 +136,6 @@ public class SimpleHttpURLConnection {
         }
     }
 }
+
+// The HttpURLConnection class
+// https://doc.oracle.com/en/java/javase/15/docs/api/java.base/java/net/HttpURLConnection.html
